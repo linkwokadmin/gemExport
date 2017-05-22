@@ -1,0 +1,89 @@
+#-----------------------------------------------------
+# page settings
+#-----------------------------------------------------
+docx.page_margins do
+    left            1000
+    right           800
+    top             800
+    bottom          800
+end
+
+docx.page_numbers true do
+    align           :right
+end
+
+docx.font name: 'Courier New'
+
+docx.style do
+    id              'AltFont'
+    name            'altFont'
+    font            'Palatino'
+end
+
+docx.style do
+    id              'Heading1'
+    name            'Heading 1'
+    size            44
+    bold            true
+    align           :center
+end
+
+docx.style do
+    id              'Heading2'
+    name            'Heading 2'
+    size            36
+    bold            true
+    align           :center
+end
+
+docx.style do
+id                  'Heading3'
+    name            'Heading 3'
+    size            28
+    bold            true
+    align           :left
+end
+
+docx.style do
+    id              'Normal'
+    name            'Normal'
+    size            24
+    align           :left
+end
+
+#-----------------------------------------------------
+# heading
+#-----------------------------------------------------
+
+#-----------------------------------------------------
+# title
+#-----------------------------------------------------
+if @data.logo_path.present?
+    data = Base64.encode64(File.read(@data.logo_path))
+    docx.img @data.logo_path, data: data, width: 150, align: :center
+end
+
+docx.img open('http://combiboilersleeds.com/images/any/any-2.jpg'), data: data, width: 150, align: :center
+
+if @data.title.present?
+    docx.h1 @data.title
+end
+
+if @data.subtitle.present?
+    docx.h2 @data.subtitle
+end
+
+#-----------------------------------------------------
+# body
+#-----------------------------------------------------
+if @data.paragraphs.any?
+    @data.paragraphs.each do |paragraph|
+        if paragraph.heading.present?
+            docx.h3 paragraph.heading
+        end
+
+        if paragraph.body.present?
+            docx.p paragraph.body
+        end
+    end
+end
