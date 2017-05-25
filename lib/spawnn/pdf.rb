@@ -57,7 +57,12 @@ class Spawnn::PDF < Prawn::Document
         end
     end
 
-    def self.fromHTML(html, page_size = 'A4')
-        PDFKit.new(html, page_size: page_size).to_pdf
+    def self.fromHTML(html, stylesheets = [], page_size = 'A4')
+        pdfkit = PDFKit.new(html, page_size: page_size)
+        stylesheets.each do |stylesheet|
+            pdfkit.stylesheets << Rails.root + '/assets' + "/#{stylesheet}.css"
+        end
+
+        pdfkit.to_pdf
     end
 end
