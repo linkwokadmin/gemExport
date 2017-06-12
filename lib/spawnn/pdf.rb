@@ -59,8 +59,21 @@ class Spawnn::PDF < Prawn::Document
 
     def self.fromHTML(html, stylesheets = [], page_size = 'A4')
         pdfkit = PDFKit.new(html, page_size: page_size)
-        stylesheets.each do |stylesheet|
-            pdfkit.stylesheets << Rails.root + '/assets' + "/#{stylesheet}.css"
+        pdfkit.stylesheets << File.dirname(__FILE__)+"/assets/spawnn.css"
+        # pdfkit.stylesheets << File.dirname(__FILE__)+"/assets/spawnn.css"
+        # pdfkit.stylesheets << Rails.application.assets["application.css"].pathname
+        # pdfkit.stylesheets << Rails.application.assets["authenticated.css"].pathname
+        Dir[Rails.root+"app/assets/stylesheets/*.*"].each do |stylesheet|
+          puts "stylesheet"+stylesheet
+          puts Rails.root+"app/assets/stylesheets/*.*"
+            pdfkit.stylesheets << stylesheet
+        end
+        stylesheets.each do |folder_name|
+          
+          Dir[Rails.root+"app/assets/stylesheets"+folder_name+"*.*"].each do |stylesheet|
+            puts "stylesheet"+stylesheet
+              pdfkit.stylesheets << stylesheet
+          end
         end
 
         pdfkit.to_pdf
